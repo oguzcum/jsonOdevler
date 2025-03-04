@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Öğrenci Listesi</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+       
+         td {
+            border: 1px solid black;
+            padding: 10px;
+        }
+        
+    </style>
+</head>
+<body>
+  
+    <input type="text" id="name" placeholder="Öğrenci Adı">
+    <input type="text" id="class" placeholder="Sınıf">
+    <button id="addStudent">Ekle</button>
+    <table>
+        
+            <tr>
+                <td>İsim</td>
+                <td>Sınıf</td>
+                <td>Sil</td>
+            </tr>
+        
+        <tbody id="studentTable">
+        </tbody>
+    </table>
+
+    <script>
+        let studentData = [
+            { name: "asdasd", class: "1A" },
+            { name: "fsafasfasf", class: "12B" },
+            { name: "gasgasgag", class: "4C" }
+        ];
+
+        function renderTable() {
+            let tableBody = $("#studentTable");
+            tableBody.empty();
+            studentData.forEach((student, index) => {
+                tableBody.append(`
+                    <tr data-index="${index}">
+                        <td>${student.name}</td>
+                        <td>${student.class}</td>
+                        <td><button class="deleteStudent">Sil</button></td>
+                    </tr>
+                `);
+            });
+        }
+
+        $(document).ready(function () {
+            renderTable();
+
+            $("#addStudent").click(function () {
+                let name = $("#name").val().trim();
+                let className = $("#class").val().trim();
+                if (name && className) {
+                    studentData.push({ name, class: className });
+                    renderTable();
+                    $("#name, #class").val("");
+                }
+            });
+
+            $(document).on("click", ".deleteStudent", function () {
+                let index = $(this).closest("tr").data("index");
+                studentData.splice(index, 1);
+                renderTable();
+            });
+
+            $(document).on("click", "tr", function () {
+                $(this).toggleClass("highlighted");
+            });
+
+            $(document).on("mouseenter", "tr", function () {
+                $(this).css("background-color", ("#5edb0a"));
+            });
+
+            $(document).on("mouseleave", "tr", function () {
+                $(this).css("background-color", "");
+            });
+        });
+
+
+       
+
+        
+    </script>
+</body>
+</html>
