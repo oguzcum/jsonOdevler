@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+</head>
+
+<style>
+    .result-item{
+        background-color: rgb(215, 235, 235);
+        margin: 100px;
+        
+    }
+</style>
+<body>
+
+    <div id="postContainer">
+
+</div>
+
+
+
+<div class="demo-section">
+    <h4>POST İsteği</h4>
+    <div class="form-container">
+        <div class="input-group">
+            <input type="text" id="nameInput" placeholder="İsim" class="form-control">
+            <input type="number" id="ageInput" placeholder="Yaş" class="form-control">
+            <textarea id="bioInput" placeholder="Hakkında" class="form-control"></textarea>
+        </div>
+        <div class="button-group">
+            <button id="postUserBtn" class="btn btn-success">Kullanıcı Ekle</button>
+
+        </div>
+        <div id="postResults" class="results-panel"></div>
+    </div>
+</div>
+
+
+
+<script>
+$(document).ready(function() {
+
+
+   
+$('#getPosts').ready(function() {
+        $.getJSON('https://jsonplaceholder.typicode.com/posts?_limit=5')
+            .done(function(posts) {
+                posts.forEach(function(post) {
+                    const html = `
+                        <div class="result-item success">
+                            <h1>${post.title}</h1>
+                            <p>${post.body}</p>
+                            <small>Post ID: ${post.id}</small>
+                        </div>
+                    `;
+                    $('#postContainer').append(html);
+                });
+            })
+            .fail(function(xhr, status, error) {
+                showError(error);
+            });
+    });
+    
+
+
+
+
+$('#postUserBtn').click(function() {
+        const userData = {
+            name: $('#nameInput').val(),
+            age: $('#ageInput').val(),
+            bio: $('#bioInput').val()
+        };
+
+        $.post('https://jsonplaceholder.typicode.com/users', userData)
+            .done(function(response) {
+                const html = `
+                    <div class="result-item success">
+                        <h5>Yeni Kullanıcı Eklendi</h5>
+                        <p><strong>İsim:</strong> ${response.name}</p>
+                        <p><strong>Yaş:</strong> ${response.age}</p>
+                        <p><strong>Hakkında:</strong> ${response.bio}</p>
+                        <small>Yeni ID: ${response.id}</small>
+                    </div>
+                `;
+                $('#postResults').prepend(html);
+                
+              
+           
+            })
+            .fail(function(xhr) {
+                showError('#postResults', xhr.statusText);
+            });
+    });
+
+
+
+    $(document).ready(function() {
+ 
+
+    $(window).scroll(function() {
+        
+        let scrollPosition = $(window).scrollTop();
+        let windowHeight = $(window).height();
+        let documentHeight = $(document).height();
+
+        if (scrollPosition + windowHeight >= documentHeight - 10) {
+            alert("sayfanın sonuna geldiniz");
+        } 
+    });
+});
+
+
+});
+
+</script>
+
+
+</body>
+</html>
