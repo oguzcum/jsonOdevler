@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Profile Cards</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel/slick/slick.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel/slick/slick-theme.css" />
+    <style>
+        .profile-card {
+            background: #f5f5f5;
+            padding: 20px;
+            margin: 10px;
+            border-radius: 10px;
+            text-align: center;
+          
+        }
+
+    </style>
+</head>
+<body>
+    <button id="loadProfiles" class="btn">Kullanıcıları Yükle</button>
+    <div class="profile-container" id="profileContainer"></div>
+    <div class="slider" id="profileSlider"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/slick-carousel/slick/slick.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#loadProfiles').click(function() {
+                $(this).effect("shake");
+                $.getJSON('https://randomuser.me/api/?results=5', function(data) {
+                    
+                    
+                    data.results.forEach(user => {
+                        const profileHTML = `
+                            <div class="profile-card">
+                                <a href="${user.picture.large}" data-fancybox>
+                                    <img src="${user.picture.medium}" alt="Profile Picture">
+                                </a>
+                                <h3>${user.name.first} ${user.name.last}</h3>
+                                <p>${user.email}</p>
+                                <p>${user.location.country}</p>
+                            </div>
+                        `;
+                        $(profileHTML).appendTo('#profileContainer').fadeIn(1000);
+                        $(profileHTML).appendTo('#profileSlider');
+                    });
+                    
+                    $('#profileSlider').slick({
+                        slidesToShow: 3,
+                        slidesToScroll: 1,
+                        autoplay: true,
+                        autoplaySpeed: 2000,
+                    });
+                });
+            });
+            
+            $(document).on('mouseenter', '.profile-card', function() {
+                $(this).fadeTo(300, 0.7);
+            }).on('mouseleave', '.profile-card', function() {
+                $(this).fadeTo(300, 1);
+            });
+        });
+    </script>
+</body>
+</html>
